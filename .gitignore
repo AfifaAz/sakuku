@@ -1,0 +1,11 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+
+# dependencies
+node_modules/
+
+# build / runtime
+.vercel/
+*.log

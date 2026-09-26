@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta
+      name="description"
+      content="Sakuku — aplikasi keuangan pribadi yang ramah untuk penggunaan mobile dengan tampilan yang elegan."
+    />
+    <title>Sakuku</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="topbar">
+        <div class="brand-wrap">
+          <div class="brand-badge">S</div>
+          <div>
+            <p class="eyebrow">Akun pribadi</p>
+            <h1>Sakuku</h1>
+          </div>
+        </div>
+        <nav class="main-nav" aria-label="Navigasi utama">
+          <button class="nav-button active" data-target="home-view">Beranda</button>
+          <button class="nav-button" data-target="report-view">Laporan</button>
+        </nav>
+      </header>
+
+      <main>
+        <section id="home-view" class="view active">
+          <div class="hero-panel">
+            <div class="hero-copy">
+              <p class="eyebrow accent">Ringkasan hari ini</p>
+              <h2>Atur pengeluaran dan pemasukanmu dengan lebih tenang.</h2>
+            </div>
+            <div class="flower flower-large flower-one"></div>
+            <div class="flower flower-medium flower-two"></div>
+          </div>
+
+          <div class="summary-grid">
+            <article class="summary-card saldo-card">
+              <div class="card-header">
+                <span>Total saldo</span>
+                <span class="badge soft-blue">Cash</span>
+              </div>
+              <strong id="total-saldo">Rp 0</strong>
+            </article>
+
+            <article class="summary-card owner-card">
+              <div class="card-header">
+                <span>Total kepemilikan</span>
+                <span class="badge soft-pink">Aset</span>
+              </div>
+              <strong id="total-kepemilikan">Rp 0</strong>
+            </article>
+          </div>
+
+          <div class="mini-grid">
+            <article class="mini-card">
+              <p>Nilai investasi</p>
+              <strong id="nilai-investasi">Rp 0</strong>
+            </article>
+            <article class="mini-card">
+              <p>Total pengeluaran bulan ini</p>
+              <strong id="pengeluaran-bulan">Rp 0</strong>
+            </article>
+          </div>
+
+          <section class="panel chart-panel">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">Grafik</p>
+                <h3>Pengeluaran per hari</h3>
+              </div>
+              <label class="month-picker" for="month-select">
+                <span>Bulan</span>
+                <select id="month-select" aria-label="Pilih bulan"></select>
+              </label>
+            </div>
+            <div class="chart-wrap">
+              <canvas id="expense-chart" aria-label="Grafik pengeluaran bulanan"></canvas>
+            </div>
+          </section>
+
+          <section class="panel form-panel">
+            <div class="segment-toggle" role="tablist" aria-label="Jenis transaksi">
+              <button class="segment-button active" data-type="income" type="button">Pemasukan</button>
+              <button class="segment-button" data-type="expense" type="button">Pengeluaran</button>
+            </div>
+
+            <form id="transaction-form">
+              <div class="field-row input-amount">
+                <label for="amount">Nominal</label>
+                <div class="currency-field">
+                  <span>Rp</span>
+                  <input id="amount" name="amount" type="number" min="0" step="1000" placeholder="0" required />
+                </div>
+              </div>
+
+              <div class="field-row">
+                <label id="category-label" for="category">Kategori</label>
+                <select id="category" name="category" required>
+                  <option value="bulanan">Bulanan</option>
+                  <option value="lainnya">Lainnya</option>
+                  <option value="investasi">Investasi</option>
+                  <option value="makanan dan minuman">Makanan &amp; Minuman</option>
+                  <option value="kebutuhan">Kebutuhan</option>
+                  <option value="bensin">Bensin</option>
+                  <option value="kos">Kos</option>
+                  <option value="lain lain">Lain lain</option>
+                </select>
+              </div>
+
+              <div class="field-row">
+                <label for="transaction-date">Tanggal</label>
+                <input id="transaction-date" name="transaction-date" type="date" required />
+              </div>
+
+              <div class="field-row">
+                <label for="description">Deskripsi</label>
+                <textarea id="description" name="description" rows="3" placeholder="Tambahkan keterangan"></textarea>
+              </div>
+
+              <div class="form-actions">
+                <button type="submit" class="primary-btn">Simpan</button>
+                <button type="button" class="secondary-btn hidden" id="cancel-edit">Batal</button>
+              </div>
+            </form>
+          </section>
+
+          <section class="panel list-panel">
+            <div class="panel-heading compact">
+              <div>
+                <p class="eyebrow">Transaksi</p>
+                <h3>Terbaru</h3>
+              </div>
+            </div>
+            <div id="recent-transactions" class="transaction-list" aria-live="polite"></div>
+          </section>
+        </section>
+
+        <section id="report-view" class="view">
+          <div class="panel report-panel">
+            <div class="panel-heading compact">
+              <div>
+                <p class="eyebrow">Laporan</p>
+                <h3>Keuangan</h3>
+              </div>
+            </div>
+
+            <div class="report-filters">
+              <label>
+                <span>Dari</span>
+                <input type="date" id="report-start" />
+              </label>
+              <label>
+                <span>Sampai</span>
+                <input type="date" id="report-end" />
+              </label>
+            </div>
+
+            <div class="report-summary">
+              <article>
+                <span>Pemasukan</span>
+                <strong id="report-income">Rp 0</strong>
+              </article>
+              <article>
+                <span>Pengeluaran</span>
+                <strong id="report-expense">Rp 0</strong>
+              </article>
+              <article>
+                <span>Saldo bersih</span>
+                <strong id="report-balance">Rp 0</strong>
+              </article>
+            </div>
+
+            <div id="report-list" class="transaction-list report-list"></div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
